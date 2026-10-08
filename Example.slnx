@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="src/Example.Api/Example.Api.csproj" Id="88a2ad8f-9565-46ef-a368-fedf29b8a119" />
+  <Project Path="src/Example.Cli/Example.Cli.csproj" Id="37a79dce-5b09-466b-aafe-557b74af44a2" />
   <Project Path="src/Example.Product/Example.Product.csproj" />
 </Solution>
