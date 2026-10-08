@@ -1,0 +1,137 @@
+@HostAddress = http://localhost:5259
+@SeededTodoId = 00000000-0000-0000-891c-000000000001
+@UnknownTodoId = 00000000-0000-0000-0000-000000000000
+
+##############################################################################
+# Queries
+##############################################################################
+
+### List all todos (200 OK with a JSON array)
+GET {{HostAddress}}/todos
+Accept: application/json
+
+### Get a seeded todo by id (200 OK)
+GET {{HostAddress}}/todos/{{SeededTodoId}}
+Accept: application/json
+
+### Get a todo by an id that does not exist (404 Not Found)
+GET {{HostAddress}}/todos/{{UnknownTodoId}}
+Accept: application/json
+
+### Get a todo by an id that is not a GUID (404 Not Found, the route's guid constraint does not match)
+GET {{HostAddress}}/todos/not-a-guid
+Accept: application/json
+
+##############################################################################
+# Commands
+##############################################################################
+
+### Create a todo (201 Created, no body, Location header points at the new todo)
+# @name createTodo
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Write blog post",
+  "description": "Describe the basic architecture of the example solution."
+}
+
+### Get the todo created above, following the Location header (200 OK)
+# The Location header is an absolute URL, so it is used without HostAddress.
+GET {{createTodo.response.headers.Location}}
+Accept: application/json
+
+### List all todos again; the new todo appears after the seeded ones (200 OK)
+GET {{HostAddress}}/todos
+Accept: application/json
+
+##############################################################################
+# Validation failures (400 Bad Request with a validation problem body)
+##############################################################################
+
+### Empty title and description
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "",
+  "description": ""
+}
+
+### Whitespace-only title and description
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "   ",
+  "description": "   "
+}
+
+### Null title and description
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": null,
+  "description": null
+}
+
+### Missing title and description (properties omitted)
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Title over 100 characters (101)
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "description": "A valid description."
+}
+
+### Description over 500 characters (501)
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "A valid title",
+  "description": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}
+
+##############################################################################
+# Malformed requests (rejected by ASP.NET Core before validation runs)
+##############################################################################
+
+### Invalid JSON (400 Bad Request)
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+{ "title": "Missing closing brace"
+
+### No body (400 Bad Request)
+POST {{HostAddress}}/todos
+Content-Type: application/json
+Accept: application/json
+
+### Wrong content type (415 Unsupported Media Type)
+POST {{HostAddress}}/todos
+Content-Type: text/plain
+Accept: application/json
+
+Write blog post
+
+### Unsupported method on the collection (405 Method Not Allowed)
+DELETE {{HostAddress}}/todos
+Accept: application/json
+
+###
