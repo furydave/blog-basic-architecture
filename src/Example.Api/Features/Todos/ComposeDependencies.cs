@@ -1,6 +1,6 @@
 ﻿using Example.Api.Features.Todos.Constants;
-using Example.Api.Features.Todos.Controllers;
 using Example.Api.Features.Todos.Filters;
+using Example.Api.Features.Todos.Handlers;
 using Example.Api.Features.Todos.Models;
 using Example.Api.Features.Todos.Validators;
 using Example.Product.Features.Todos.Repositories.Implementation;

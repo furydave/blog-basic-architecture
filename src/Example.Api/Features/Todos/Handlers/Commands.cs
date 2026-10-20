@@ -2,7 +2,7 @@
 using Example.Api.Features.Todos.Models;
 using Example.Product.Features.Todos.Repositories.Interfaces;
 
-namespace Example.Api.Features.Todos.Controllers;
+namespace Example.Api.Features.Todos.Handlers;
 
 internal static class Commands
 {
