@@ -27,9 +27,9 @@ Then use the requests in [`Example.Api.http`](src/Example.Api/Example.Api.http).
 **CLI**
 
 ```sh
-dotnet run --project src/Example.Cli -- list-todos
-dotnet run --project src/Example.Cli -- get-todo --id 00000000-0000-0000-891c-000000000001
-dotnet run --project src/Example.Cli -- add-todo --title "Title" --description "Description"
+dotnet run --project src/Example.Cli list-todos
+dotnet run --project src/Example.Cli get-todo --id 00000000-0000-0000-891c-000000000001
+dotnet run --project src/Example.Cli add-todo --title "Title" --description "Description"
 ```
 
 ## Deliberate simplifications
